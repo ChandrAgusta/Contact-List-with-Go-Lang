@@ -29,46 +29,65 @@ func GetAll() []entities.Contact {
 	return contacts
 }
 
-func Create(contact entities.Contact) bool{
+func Create(contact entities.Contact) bool {
 	result, err := config.DB.Exec(
 		"INSERT INTO contact_list (nama, nomor) VALUE(?,?)",
 		contact.Nama, contact.Nomor,
 	)
 
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 
-	lastInsertId, err:= result.LastInsertId()
-	if err!= nil{
+	lastInsertId, err := result.LastInsertId()
+	if err != nil {
 		panic(err)
 	}
 
 	return lastInsertId > 0
 }
 
-func Detail(id int)entities.Contact{
+func Detail(id int) entities.Contact {
 	row := config.DB.QueryRow("SELECT id, nama, nomor FROM contact_list WHERE id =?", id)
 
 	var contact entities.Contact
 
-	if err := row.Scan(&contact.Id, &contact.Nama, &contact.Nomor); err != nil{
+	if err := row.Scan(&contact.Id, &contact.Nama, &contact.Nomor); err != nil {
 		panic(err.Error())
 	}
 	return contact
 }
 
-func Update(id int, contacts entities.Contact)bool {
+func Update(id int, contacts entities.Contact) bool {
 	query, err := config.DB.Exec("UPDATE contact_list SET nama = ?, nomor =? WHERE id = ?", contacts.Nama, contacts.Nomor, id)
 
-	if err!= nil{
+	if err != nil {
 		panic(err)
 	}
 
-	result,err := query.RowsAffected()
-	if err!= nil{
+	result, err := query.RowsAffected()
+	if err != nil {
 		panic(err)
 	}
 
 	return result > 0
 }
+
+func Delete(id int) bool {
+	del, err := config.DB.Exec("DELETE FROM contact_list WHERE id = ?", id)
+
+	if err != nil {
+		panic(err)
+	}
+
+	RowsAffected, err := del.RowsAffected()
+	if err != nil {
+		panic(err)
+	}
+
+	return RowsAffected > 0
+}
+
+// func Search(query string) entities.Contact{
+// 	config.DB.Query("SELECT nama, nomor FROM contact_list WHERE nama LIKE ? OR nomor LIKE ?")
+// }

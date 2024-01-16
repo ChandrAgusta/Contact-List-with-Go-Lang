@@ -92,5 +92,19 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 }
 
 func Hapus(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET"{
+		idString := r.URL.Query().Get("id")
+		id, err := strconv.Atoi(idString)
 
+		if err != nil{
+			panic(err)
+		}
+
+		if ok := contactmodel.Delete(id); !ok {
+			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 }

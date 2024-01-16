@@ -17,7 +17,7 @@ func main() {
 
 	http.HandleFunc("/tambah", contactcontroller.Add)
 	http.HandleFunc("/edit", contactcontroller.Edit)
-	http.HandleFunc("/hapus", contactcontroller.Hapus)
+	http.HandleFunc("/delete", contactcontroller.Hapus)
 
 	log.Println("Server Running on Port 3030")
 	http.ListenAndServe(":3030", nil)
